@@ -3,14 +3,17 @@ using UnityEngine;
 public class SnowballCollision : MonoBehaviour
 {
     public GameObject snowballParticlePrefab;
+    private Vector3 originalPosition;
+    private Quaternion originalRotation;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    
     void Start()
     {
-        
+        originalPosition = transform.position;
+        originalRotation = transform.rotation;
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         
@@ -27,8 +30,19 @@ public class SnowballCollision : MonoBehaviour
                 Instantiate(snowballParticlePrefab, collision.contacts[0].point, Quaternion.identity);
             }
 
-            gameObject.SetActive(false);    
-            
+            //gameObject.SetActive(false);    
+
+            // Restore position and rotation
+            transform.position = originalPosition;
+            transform.rotation = originalRotation;
+
+            // Reset velocity 
+            Rigidbody rb = GetComponent<Rigidbody>();       
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
         }
     }
 }
